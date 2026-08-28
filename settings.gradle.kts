@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "autohost"
 include(":autohost")
+include(":sample")
