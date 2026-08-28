@@ -1,0 +1,229 @@
+public abstract interface class io/github/usernamehaha/autohost/AutoHost : java/io/Closeable {
+	public static final field Companion Lio/github/usernamehaha/autohost/AutoHost$Companion;
+	public abstract fun close ()V
+	public abstract fun getCurrent ()Lio/github/usernamehaha/autohost/Host;
+	public abstract fun getState ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun pin (Lio/github/usernamehaha/autohost/Host;)V
+	public abstract fun probe (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun refresh ()V
+	public abstract fun reportFailure (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun reportFailure$default (Lio/github/usernamehaha/autohost/AutoHost;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public abstract fun reportSuccess (Ljava/lang/String;)V
+	public abstract fun rewrite (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun unpin ()V
+	public abstract fun updateHosts (Ljava/util/List;)V
+}
+
+public final class io/github/usernamehaha/autohost/AutoHost$Companion {
+	public final fun create (Landroid/content/Context;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lio/github/usernamehaha/autohost/AutoHost;
+	public static synthetic fun create$default (Lio/github/usernamehaha/autohost/AutoHost$Companion;Landroid/content/Context;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/usernamehaha/autohost/AutoHost;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHost$DefaultImpls {
+	public static synthetic fun reportFailure$default (Lio/github/usernamehaha/autohost/AutoHost;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostConfig {
+	public final fun getListener ()Lio/github/usernamehaha/autohost/AutoHostListener;
+	public final fun getMinProbeInterval-UwyO8pc ()J
+	public final fun getProbeOnNetworkChange ()Z
+	public final fun getProbeTtl-UwyO8pc ()J
+	public final fun getProber ()Lio/github/usernamehaha/autohost/Prober;
+	public final fun getStrategy ()Lio/github/usernamehaha/autohost/SelectionStrategy;
+	public final fun hosts (Ljava/util/List;)V
+	public final fun hosts ([Ljava/lang/String;)V
+	public final fun setListener (Lio/github/usernamehaha/autohost/AutoHostListener;)V
+	public final fun setMinProbeInterval-LRDsOJo (J)V
+	public final fun setProbeOnNetworkChange (Z)V
+	public final fun setProbeTtl-LRDsOJo (J)V
+	public final fun setProber (Lio/github/usernamehaha/autohost/Prober;)V
+	public final fun setStrategy (Lio/github/usernamehaha/autohost/SelectionStrategy;)V
+}
+
+public abstract interface class io/github/usernamehaha/autohost/AutoHostEvent {
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$CacheDiscarded : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public final fun getCause ()Ljava/lang/Throwable;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$CacheRestored : io/github/usernamehaha/autohost/AutoHostEvent {
+	public synthetic fun <init> (Lio/github/usernamehaha/autohost/Host;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAge-UwyO8pc ()J
+	public final fun getCurrent ()Lio/github/usernamehaha/autohost/Host;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$CacheWriteFailed : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public final fun getCause ()Ljava/lang/Throwable;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$HostSwitched : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Lio/github/usernamehaha/autohost/Host;Lio/github/usernamehaha/autohost/Host;Lio/github/usernamehaha/autohost/SwitchReason;)V
+	public final fun getFrom ()Lio/github/usernamehaha/autohost/Host;
+	public final fun getReason ()Lio/github/usernamehaha/autohost/SwitchReason;
+	public final fun getTo ()Lio/github/usernamehaha/autohost/Host;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$HostsUpdated : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getHosts ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$NetworkMonitorUnavailable : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public final fun getCause ()Ljava/lang/Throwable;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$PinCleared : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Lio/github/usernamehaha/autohost/Host;)V
+	public final fun getHost ()Lio/github/usernamehaha/autohost/Host;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$ProbeFinished : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getResults ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$ProbeSkippedOffline : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Lio/github/usernamehaha/autohost/ProbeTrigger;)V
+	public final fun getTrigger ()Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$ProbeStarted : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Lio/github/usernamehaha/autohost/ProbeTrigger;)V
+	public final fun getTrigger ()Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostEvent$StrategyFailed : io/github/usernamehaha/autohost/AutoHostEvent {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public final fun getCause ()Ljava/lang/Throwable;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/github/usernamehaha/autohost/AutoHostListener {
+	public abstract fun onEvent (Lio/github/usernamehaha/autohost/AutoHostEvent;)V
+}
+
+public final class io/github/usernamehaha/autohost/AutoHostState {
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrent ()Lio/github/usernamehaha/autohost/Host;
+	public final fun getHosts ()Ljava/util/List;
+	public final fun getPinned ()Lio/github/usernamehaha/autohost/Host;
+	public fun hashCode ()I
+	public final fun isProbing ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/Host {
+	public static final field Companion Lio/github/usernamehaha/autohost/Host$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPort ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/Host$Companion {
+	public final fun parse (Ljava/lang/String;)Lio/github/usernamehaha/autohost/Host;
+}
+
+public final class io/github/usernamehaha/autohost/HostStatus {
+	public fun <init> (Lio/github/usernamehaha/autohost/Host;Lio/github/usernamehaha/autohost/ProbeResult;Lkotlin/time/TimeMark;ILkotlin/time/TimeMark;)V
+	public synthetic fun <init> (Lio/github/usernamehaha/autohost/Host;Lio/github/usernamehaha/autohost/ProbeResult;Lkotlin/time/TimeMark;ILkotlin/time/TimeMark;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getConsecutiveFailures ()I
+	public final fun getHost ()Lio/github/usernamehaha/autohost/Host;
+	public final fun getLastFailureAt ()Lkotlin/time/TimeMark;
+	public final fun getLastProbe ()Lio/github/usernamehaha/autohost/ProbeResult;
+	public final fun getLastProbeAt ()Lkotlin/time/TimeMark;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/github/usernamehaha/autohost/ProbeResult {
+}
+
+public final class io/github/usernamehaha/autohost/ProbeResult$Failure : io/github/usernamehaha/autohost/ProbeResult {
+	public fun <init> (Ljava/lang/Throwable;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCause ()Ljava/lang/Throwable;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/ProbeResult$Success : io/github/usernamehaha/autohost/ProbeResult {
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLatency-UwyO8pc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/usernamehaha/autohost/ProbeTrigger : java/lang/Enum {
+	public static final field FAILURE Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public static final field HOSTS_UPDATED Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public static final field MANUAL Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public static final field NETWORK_CHANGED Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public static final field STALE Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/usernamehaha/autohost/ProbeTrigger;
+	public static fun values ()[Lio/github/usernamehaha/autohost/ProbeTrigger;
+}
+
+public abstract interface class io/github/usernamehaha/autohost/Prober {
+	public static final field Companion Lio/github/usernamehaha/autohost/Prober$Companion;
+	public abstract fun probe (Lio/github/usernamehaha/autohost/Host;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/github/usernamehaha/autohost/Prober$Companion {
+	public final fun http-1Y68eR8 (Ljava/lang/String;Ljava/lang/String;JLokhttp3/OkHttpClient;Lkotlin/jvm/functions/Function1;)Lio/github/usernamehaha/autohost/Prober;
+	public static synthetic fun http-1Y68eR8$default (Lio/github/usernamehaha/autohost/Prober$Companion;Ljava/lang/String;Ljava/lang/String;JLokhttp3/OkHttpClient;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/github/usernamehaha/autohost/Prober;
+}
+
+public abstract interface class io/github/usernamehaha/autohost/SelectionStrategy {
+	public static final field Companion Lio/github/usernamehaha/autohost/SelectionStrategy$Companion;
+	public abstract fun select (Ljava/util/List;Lio/github/usernamehaha/autohost/Host;)Lio/github/usernamehaha/autohost/Host;
+}
+
+public final class io/github/usernamehaha/autohost/SelectionStrategy$Companion {
+	public final fun lowestLatency-SxA4cEA (DIJ)Lio/github/usernamehaha/autohost/SelectionStrategy;
+	public static synthetic fun lowestLatency-SxA4cEA$default (Lio/github/usernamehaha/autohost/SelectionStrategy$Companion;DIJILjava/lang/Object;)Lio/github/usernamehaha/autohost/SelectionStrategy;
+	public final fun priority-HG0u8IE (IJ)Lio/github/usernamehaha/autohost/SelectionStrategy;
+	public static synthetic fun priority-HG0u8IE$default (Lio/github/usernamehaha/autohost/SelectionStrategy$Companion;IJILjava/lang/Object;)Lio/github/usernamehaha/autohost/SelectionStrategy;
+}
+
+public final class io/github/usernamehaha/autohost/SelectionStrategyKt {
+	public static final fun skipFailing-SxA4cEA (Lio/github/usernamehaha/autohost/SelectionStrategy;IJ)Lio/github/usernamehaha/autohost/SelectionStrategy;
+	public static synthetic fun skipFailing-SxA4cEA$default (Lio/github/usernamehaha/autohost/SelectionStrategy;IJILjava/lang/Object;)Lio/github/usernamehaha/autohost/SelectionStrategy;
+}
+
+public final class io/github/usernamehaha/autohost/SwitchReason : java/lang/Enum {
+	public static final field FAILURE Lio/github/usernamehaha/autohost/SwitchReason;
+	public static final field HOSTS_UPDATED Lio/github/usernamehaha/autohost/SwitchReason;
+	public static final field PINNED Lio/github/usernamehaha/autohost/SwitchReason;
+	public static final field PROBE Lio/github/usernamehaha/autohost/SwitchReason;
+	public static final field UNPINNED Lio/github/usernamehaha/autohost/SwitchReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/github/usernamehaha/autohost/SwitchReason;
+	public static fun values ()[Lio/github/usernamehaha/autohost/SwitchReason;
+}
+
+public final class io/github/usernamehaha/autohost/okhttp/AutoHostInterceptor : okhttp3/Interceptor {
+	public fun <init> (Lio/github/usernamehaha/autohost/AutoHost;Ljava/util/Set;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lio/github/usernamehaha/autohost/AutoHost;Ljava/util/Set;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun intercept (Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;
+}
+
