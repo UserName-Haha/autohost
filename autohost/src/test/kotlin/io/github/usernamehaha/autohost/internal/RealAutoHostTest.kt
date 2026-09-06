@@ -439,6 +439,30 @@ class RealAutoHostTest {
     }
 
     @Test
+    fun `传入和当前相同的线路列表时什么都不做`() = runTest {
+        val prober = FakeProber("a.com" to 300.milliseconds, "b.com" to 100.milliseconds)
+        val autoHost = autoHost(prober)
+        advanceUntilIdle()
+        repeat(3) { autoHost.updateHosts(listOf("a.com", "B.com")) }
+        advanceUntilIdle()
+        assertEquals(2, prober.probed.size)
+        assertTrue(listener.all<AutoHostEvent.HostsUpdated>().isEmpty())
+        autoHost.close()
+    }
+
+    @Test
+    fun `网络反复抖动时探测串行进行，不会并发堆积`() = runTest {
+        val prober = FakeProber("a.com" to 300.milliseconds, "b.com" to 100.milliseconds)
+        val autoHost = autoHost(prober)
+        runCurrent()
+        repeat(10) { network.switchNetwork() }
+        advanceUntilIdle()
+        // 进行中的一轮 + 结束后补的一轮
+        assertEquals(4, prober.probed.size)
+        autoHost.close()
+    }
+
+    @Test
     fun `当前线路被移出列表时立即换线路`() = runTest {
         val autoHost = autoHost(FakeProber("a.com" to 300.milliseconds, "b.com" to 100.milliseconds, "c.com" to 900.milliseconds))
         advanceUntilIdle()

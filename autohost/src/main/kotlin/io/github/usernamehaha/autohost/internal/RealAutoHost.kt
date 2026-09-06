@@ -135,6 +135,8 @@ internal class RealAutoHost(
     override fun updateHosts(hosts: List<String>) {
         val parsed = parseHosts(hosts)
         if (closed.get()) return
+        // 接入方通常每次拉到远程配置都会调一遍，列表没变就不要白白探测一轮
+        if (_state.value.hosts.map { it.host } == parsed) return
         val change = update(SwitchReason.HOSTS_UPDATED, reselect = true) { snapshot ->
             val known = snapshot.hosts.associateBy { it.host }
             snapshot.copy(

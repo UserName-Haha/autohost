@@ -24,7 +24,10 @@ public class AutoHostConfig internal constructor() {
     /** 测量结果的有效期。过期后下一次读取线路时会触发后台探测；缓存超过这个时间也只恢复线路、不恢复测量结果。 */
     public var probeTtl: Duration = 10.minutes
 
-    /** 自动触发的探测之间的最小间隔。`refresh()` 和 `probe()` 不受限制。 */
+    /**
+     * 由"测量结果过期"和"请求失败"触发的探测之间的最小间隔。这两种触发来自请求路径，频率可能很高。
+     * 网络切换、线路列表变更、`refresh()` 和 `probe()` 不受限制：它们意味着手里的测量结果已经作废。
+     */
     public var minProbeInterval: Duration = 30.seconds
 
     /** 网络切换后是否重新探测。需要 App 已声明 `ACCESS_NETWORK_STATE`。 */

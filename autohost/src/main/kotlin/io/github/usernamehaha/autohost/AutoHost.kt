@@ -43,7 +43,7 @@ public interface AutoHost : Closeable {
     public fun reportFailure(url: String, cause: Throwable? = null)
 
     /**
-     * 整体替换线路列表并触发探测。仍在新列表里的线路保留已有的事实。
+     * 整体替换线路列表并触发探测；和当前列表完全相同时什么都不做。仍在新列表里的线路保留已有的事实。
      * 库不保存线路列表，下次启动仍以 [AutoHostConfig.hosts] 为准。
      *
      * @throws IllegalArgumentException 列表为空或含有不合法的主机名
