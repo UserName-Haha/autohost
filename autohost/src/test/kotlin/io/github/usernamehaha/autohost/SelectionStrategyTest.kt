@@ -98,6 +98,22 @@ class SelectionStrategyTest {
     }
 
     @Test
+    fun `README 里的自定义策略示例`() {
+        val preferPrimary = SelectionStrategy { hosts, _ ->
+            fun latency(status: HostStatus) = (status.lastProbe as? ProbeResult.Success)?.latency
+            val fastest = hosts.filter { latency(it) != null }.minByOrNull { latency(it)!! }
+                ?: return@SelectionStrategy hosts.first().host
+            val primary = hosts.firstOrNull { it.host.name == "a.com" }
+            val primaryLatency = primary?.let(::latency)
+            if (primaryLatency != null && primaryLatency - latency(fastest)!! < 300.milliseconds) primary.host else fastest.host
+        }
+        assertEquals(a, preferPrimary.select(listOf(HostStatus(a), HostStatus(b)), null))
+        assertEquals(a, preferPrimary.select(listOf(ok(a, 350.milliseconds), ok(b, 100.milliseconds)), b))
+        assertEquals(b, preferPrimary.select(listOf(ok(a, 450.milliseconds), ok(b, 100.milliseconds)), a))
+        assertEquals(b, preferPrimary.select(listOf(failed(a), ok(b, 100.milliseconds)), a))
+    }
+
+    @Test
     fun `参数校验`() {
         assertThrows(IllegalArgumentException::class.java) { SelectionStrategy.lowestLatency(switchThreshold = 1.5) }
         assertThrows(IllegalArgumentException::class.java) { SelectionStrategy.priority(failureThreshold = 0) }
