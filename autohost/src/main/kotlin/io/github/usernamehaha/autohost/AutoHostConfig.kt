@@ -33,6 +33,14 @@ public class AutoHostConfig internal constructor() {
     /** 网络切换后是否重新探测。需要 App 已声明 `ACCESS_NETWORK_STATE`。 */
     public var probeOnNetworkChange: Boolean = true
 
-    /** 不设置就完全静默。 */
-    public var listener: AutoHostListener? = null
+    internal var listener: AutoHostListener? = null
+
+    /**
+     * 接收库内部的事件，不设置就完全静默。
+     *
+     * 做成函数而不是属性，是因为 Kotlin 只对函数参数做 SAM 转换：这样可以直接写 `listener { event -> ... }`。
+     */
+    public fun listener(listener: AutoHostListener) {
+        this.listener = listener
+    }
 }

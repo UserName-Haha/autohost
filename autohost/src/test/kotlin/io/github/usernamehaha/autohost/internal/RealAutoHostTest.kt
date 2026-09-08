@@ -49,7 +49,7 @@ class RealAutoHostTest {
         val config = AutoHostConfig().apply {
             hosts("a.com", "b.com")
             this.prober = prober
-            this.listener = this@RealAutoHostTest.listener
+            listener(this@RealAutoHostTest.listener)
             configure()
         }
         val dispatcher = StandardTestDispatcher(testScheduler)
@@ -618,7 +618,7 @@ class RealAutoHostTest {
 
     @Test
     fun `监听器抛异常不影响调用方`() = runTest {
-        val autoHost = autoHost { listener = io.github.usernamehaha.autohost.AutoHostListener { error("listener bug") } }
+        val autoHost = autoHost { listener { error("listener bug") } }
         advanceUntilIdle()
         repeat(3) { autoHost.reportFailure("https://b.com/") }
         assertEquals(a, autoHost.current)

@@ -24,7 +24,6 @@ public final class io/github/usernamehaha/autohost/AutoHost$DefaultImpls {
 }
 
 public final class io/github/usernamehaha/autohost/AutoHostConfig {
-	public final fun getListener ()Lio/github/usernamehaha/autohost/AutoHostListener;
 	public final fun getMinProbeInterval-UwyO8pc ()J
 	public final fun getProbeOnNetworkChange ()Z
 	public final fun getProbeTtl-UwyO8pc ()J
@@ -32,7 +31,7 @@ public final class io/github/usernamehaha/autohost/AutoHostConfig {
 	public final fun getStrategy ()Lio/github/usernamehaha/autohost/SelectionStrategy;
 	public final fun hosts (Ljava/util/List;)V
 	public final fun hosts ([Ljava/lang/String;)V
-	public final fun setListener (Lio/github/usernamehaha/autohost/AutoHostListener;)V
+	public final fun listener (Lio/github/usernamehaha/autohost/AutoHostListener;)V
 	public final fun setMinProbeInterval-LRDsOJo (J)V
 	public final fun setProbeOnNetworkChange (Z)V
 	public final fun setProbeTtl-LRDsOJo (J)V
