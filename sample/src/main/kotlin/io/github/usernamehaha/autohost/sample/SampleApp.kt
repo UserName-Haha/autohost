@@ -1,9 +1,9 @@
 package io.github.usernamehaha.autohost.sample
 
 import android.app.Application
+import android.util.Log
 import io.github.usernamehaha.autohost.AutoHost
 import io.github.usernamehaha.autohost.AutoHostEvent
-import io.github.usernamehaha.autohost.AutoHostListener
 import io.github.usernamehaha.autohost.Prober
 import io.github.usernamehaha.autohost.okhttp.AutoHostInterceptor
 import kotlinx.coroutines.channels.BufferOverflow
@@ -32,7 +32,11 @@ class SampleApp : Application() {
         autoHost = AutoHost.create(this) {
             hosts(BINANCE_HOSTS)
             prober = Prober.http(path = "/api/v3/ping", client = baseClient)
-            listener = AutoHostListener { _events.tryEmit(it) }
+            // 库默认不打任何日志，要不要打、打到哪里由接入方决定
+            listener { event ->
+                Log.d("AutoHost", event.toString())
+                _events.tryEmit(event)
+            }
         }
 
         apiClient = baseClient.newBuilder()
