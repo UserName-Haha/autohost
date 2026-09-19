@@ -109,7 +109,7 @@ val url = wsHosts.rewrite("wss://ws.example.com/stream")
 ```
 
 WebSocket 线路和 HTTP 线路是同一批域名的话，直接共用一个实例即可：`rewrite` 只替换主机，`wss://` 会原样保留。
-配合 [ws-market-client](https://github.com/UserName-Haha/ws-market-client) 使用时，把 `rewrite` 放进它的 `url { }` 里，每次重连都会取到当时的最优线路。
+配合 [resocket](https://github.com/UserName-Haha/resocket) 使用时，把 `rewrite` 放进它的 `url { }` 里，每次重连都会取到当时的最优线路。
 
 `reportSuccess` / `reportFailure` 不抛异常，URL 不属于本组线路时直接忽略，可以放在全局的网络回调里无条件调用。
 
