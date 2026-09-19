@@ -64,6 +64,32 @@ val client = OkHttpClient.Builder()
 > 如果 App 声明了 `ACCESS_NETWORK_STATE`，AutoHost 会在网络切换后重新探测，并在离线时暂停探测和失败计数。
 > 库本身不声明这个权限；没有它其余功能照常工作。
 
+几点说明：
+
+- `AutoHost` 是进程级的单例，在 `Application.onCreate` 或 DI 容器里创建一次。同名实例没有 `close()` 就再次创建会抛异常。
+- 创建之后立刻可用，不需要等探测：没有缓存时先用列表里的第一条线路，探测在后台完成后自动切换；下次冷启动直接恢复上次的线路。
+- `AutoHostInterceptor` 用 `addInterceptor` 添加，并且放在其他拦截器前面，这样日志、签名等拦截器看到的都是改写之后的主机。
+- 默认对每条线路的 `https://<host>/` 发 GET，状态码小于 500 就算通。有轻量的 ping 接口的话，用 `prober = Prober.http(path = "/ping")` 换掉。
+
+### 确认它在工作
+
+库默认不输出任何日志。接入时先把事件打出来看一眼：
+
+```kotlin
+AutoHost.create(context) {
+    hosts("api.example.com", "api.example.net", "api.example.org")
+    listener { event -> Log.d("AutoHost", event.toString()) }
+}
+```
+
+```
+D AutoHost: 开始探测，触发原因：STALE
+D AutoHost: 探测结束：api.example.com=Success(212ms), api.example.net=Success(87ms), api.example.org=Failure(SocketTimeoutException: timeout)
+D AutoHost: 线路切换 api.example.com -> api.example.net，原因：PROBE
+```
+
+第二次启动会看到 `从缓存恢复线路 api.example.net，缓存生成于 3m 12s 前`，并且不再立即探测。
+
 ## 在 OkHttp 之外使用
 
 拦截器只是一个适配器，核心是 `AutoHost` 本身：
@@ -82,6 +108,9 @@ val url = wsHosts.rewrite("wss://ws.example.com/stream")
 // 建连失败：wsHosts.reportFailure(url, error)
 ```
 
+WebSocket 线路和 HTTP 线路是同一批域名的话，直接共用一个实例即可：`rewrite` 只替换主机，`wss://` 会原样保留。
+配合 [ws-market-client](https://github.com/UserName-Haha/ws-market-client) 使用时，把 `rewrite` 放进它的 `url { }` 里，每次重连都会取到当时的最优线路。
+
 `reportSuccess` / `reportFailure` 不抛异常，URL 不属于本组线路时直接忽略，可以放在全局的网络回调里无条件调用。
 
 线路选择页面：
@@ -96,6 +125,8 @@ autoHost.pin(host)   // 用户手动选线路：不再自动切换和自动探�
 autoHost.unpin()
 autoHost.probe()     // "重新测速"按钮，挂起到这一轮探测结束
 ```
+
+需要用远程开关整体关闭择优时，`pin` 住列表里的第一条线路即可，库里没有单独的"启用/禁用"。
 
 线路列表由服务端下发时：
 
@@ -129,7 +160,7 @@ AutoHost.create(context, name = "default") {
     minProbeInterval = 30.seconds    // 自动探测的最小间隔
     probeOnNetworkChange = true
 
-    listener = AutoHostListener { event -> Log.d("AutoHost", event.toString()) }
+    listener { event -> Log.d("AutoHost", event.toString()) }   // 默认不设置，完全静默
 }
 ```
 
@@ -204,6 +235,8 @@ prober = Prober { host ->
 - **不支持多进程**共用同一个 `name`。
 - **线路不能带 path 前缀**，只能是主机名加可选端口。
 - **创建时同步读一次缓存文件。** 文件只有几百字节，但开了 StrictMode 磁盘读检测的话会被报出来。
+- **失败计数只有成功的请求才会清零。** 一条线路被跳过、冷却结束后重新参与选择，这时它再失败一次就会立刻被再次跳过，
+  不需要重新累计到阈值。这是有意的（半开状态），但也意味着很久以前的失败记录会让它对下一次失败更敏感。
 - **Kotlin 优先。** API 用了 DSL、`Duration` 和挂起函数，从 Java 调用不方便。
 
 ## 路线图
